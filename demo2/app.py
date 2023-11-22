@@ -33,9 +33,34 @@ class MainWindow(QMainWindow):
         self.showMaximized()
         self.history = []
         self.extensions = []
+        self.setCentralWidget(self.browser)
+        self.showMaximized()
 
         navbar = QToolBar()
         self.addToolBar(navbar)
+
+        # Tạo menu Bar
+        menu_bar = self.menuBar()
+
+        # Tạo menu "Favorites"
+        favorites_menu = menu_bar.addMenu("Favorites")
+
+        # Thêm biểu tượng cho các trang web yêu thích
+        google_action = QAction("Google", self)
+        google_icon = QIcon("./image/google.png")  # Đường dẫn đến biểu tượng của Google
+        google_action.setIcon(google_icon)
+        google_action.triggered.connect(lambda: self.open_url("http://www.google.com"))
+        favorites_menu.addAction(google_action)
+
+        facebook_action = QAction("Facebook", self)
+        facebook_icon = QIcon(
+            "./image/facebook.jpg"
+        )  # Đường dẫn đến biểu tượng của Facebook
+        facebook_action.setIcon(facebook_icon)
+        facebook_action.triggered.connect(
+            lambda: self.open_url("http://www.facebook.com")
+        )
+        favorites_menu.addAction(facebook_action)
 
         back_btn = QAction("Back", self)
         back_btn.triggered.connect(self.browser.back)
@@ -160,6 +185,9 @@ class MainWindow(QMainWindow):
         else:
             print("Không thể tải video từ trang web khác YouTube.")
 
+    def open_url(self, url):
+        self.browser.setUrl(QUrl(url))
+
 
 # Create a HistoryDialog class for displaying history
 class HistoryDialog(QDialog):
@@ -187,9 +215,6 @@ class ExtensionsDialog(QDialog):
 
         layout.addWidget(self.extensions_list)
         self.setLayout(layout)
-
-
-# Download video youtube
 
 
 app = QApplication(sys.argv)
