@@ -62,6 +62,12 @@ class MainWindow(QMainWindow):
         )
         favorites_menu.addAction(facebook_action)
 
+        vku_action = QAction("VKU", self)
+        vku_icon = QIcon("./image/logo_vku.svg")  # Đường dẫn đến biểu tượng của Google
+        vku_action.setIcon(vku_icon)
+        vku_action.triggered.connect(lambda: self.open_url("https://vku.udn.vn/"))
+        favorites_menu.addAction(vku_action)
+
         back_btn = QAction("Back", self)
         back_btn.triggered.connect(self.browser.back)
         navbar.addAction(back_btn)
@@ -81,6 +87,15 @@ class MainWindow(QMainWindow):
         self.url_bar = QLineEdit()
         self.url_bar.returnPressed.connect(self.navigate_to_url)
         navbar.addWidget(self.url_bar)
+
+        # Create a search bar
+        self.search_bar = QLineEdit()
+        self.search_bar.returnPressed.connect(self.search)
+        navbar.addWidget(self.search_bar)
+
+        search_btn = QAction("Search", self)
+        search_btn.triggered.connect(self.search)
+        navbar.addAction(search_btn)
 
         history_action = QAction("History", self)
         history_action.triggered.connect(self.show_history)
@@ -167,6 +182,19 @@ class MainWindow(QMainWindow):
         print("Number of <div> tags:", len(div_tags))
         print("Number of <span> tags:", len(span_tags))
         print("Number of <img> tags:", len(img_tags))
+
+    # search google
+    def search(self):
+        # Get the search query from the search bar
+        search_query = self.search_bar.text()
+        if search_query:
+            # Call the method to perform the search
+            self.search_google(search_query)
+
+    def search_google(self, query):
+        search_url = f"https://www.google.com/search?q={query}"
+        self.browser.setUrl(QUrl(search_url))
+        self.history.append(search_url)
 
     #  Download video youtube
     def download_video(self):
